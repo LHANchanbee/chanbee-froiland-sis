@@ -3,7 +3,7 @@ from users import Users
 from students import Students
 
 app = Flask(__name__)
-app.secret_key = "gege"
+app.secret_key = "chanbee"
 
 @app.route('/')
 def index():

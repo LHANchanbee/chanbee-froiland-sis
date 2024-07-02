@@ -11,7 +11,7 @@ body {
   
   /* Login Container Styles */
   .login-container {
-    background-color: white;
+    background-color: #91DDCF;
     padding: 40px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -44,7 +44,7 @@ body {
   }
   
   button {
-    background-color: #3FA2F6;
+    background-color: #F19ED2;
     color: white;
     padding: 10px 20px;
     border: none;

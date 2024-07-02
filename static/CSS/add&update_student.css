@@ -89,7 +89,7 @@ body {
   }
   
   button[type=submit] {
-    background-color: #4CAF50;
+    background-color: #F19ED2;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -98,6 +98,6 @@ body {
   }
   
   button[type=submit]:hover {
-    background-color: #45a049;
+    background-color: #E8C5E5;
   }
   
