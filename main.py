@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for
 from users import Users
-from employees import Employee
+from students import Students
 
 app = Flask(__name__)
-app.secret_key = "sabbak"
+app.secret_key = "gege"
 
 @app.route('/')
 def index():
@@ -17,67 +17,69 @@ def check_user():
     result = Users.check_user(username, password)
 
     if result:
-        return redirect('/employee-list')
+        return redirect('/student-list')
     else:
-        session['message'] = "Invalid username or password"
-        return redirect('/')
+        return render_template('index.html')
 
-@app.route('/employee-list')
-def employee_list():
-    employees = Employee.get_all()
-    message = session.pop('message', '')
-    return render_template('employee_list.html', employees=employees, message=message)
+@app.route('/student-list')
+def student_list():
+    students = Students.get_all()
+    message = session.pop('message', "")
+    return render_template('student_list.html', students=students, message=message)
 
 @app.route('/add-form')
-def add_form():
-    return render_template('add_employee.html')
+def add_student():
+    return render_template('add_student.html')
 
-@app.route('/add-employee', methods=['POST'])
-def add_employee():
-    emp_id = request.form["emp_id"]
+@app.route('/add-form', methods=["POST"])
+def add_student_post():
+    student_id = request.form["student_id"]
     lname = request.form["lname"]
     fname = request.form["fname"]
     mname = request.form["mname"]
+    sex = request.form["sex"]
+    address = request.form["address"]
+    course_id = request.form["course_id"]
 
-    success = Employee.add_employee(emp_id, lname, fname, mname)
-
-    if success:
-        session["message"] = "Successfully added"
-    else:
-        session["message"] = "Failed to add employee"
-
-    return redirect('/employee-list')
-
-@app.route('/update-form/<emp_id>')
-def update_form(emp_id):
-    employee = Employee.get_by_id(emp_id)
-    return render_template('update_employee.html', employee=employee)
-
-@app.route('/update-employee/<emp_id>', methods=['POST'])
-def update_employee(emp_id):
-    lname = request.form["lname"]
-    fname = request.form["fname"]
-    mname = request.form["mname"]
-
-    success = Employee.update_employee(emp_id, lname, fname, mname)
+    success = Students.add_student(student_id, lname, fname, mname, sex, address, course_id)
 
     if success:
-        session["message"] = "Successfully updated"
+        session["message"] = "Student successfully added"
     else:
-        session["message"] = "Failed to update employee"
+        session["message"] = "Failed to add student"
+    
+    return redirect('/student-list')
 
-    return redirect('/employee-list')
+@app.route('/update-student/<student_id>', methods=['GET', 'POST'])
+def update_student(student_id):
+    if request.method == 'POST':
+        lname = request.form["lname"]
+        fname = request.form["fname"]
+        mname = request.form["mname"]
+        sex = request.form["sex"]
+        address = request.form["address"]
+        course_id = request.form["course_id"]
 
-@app.route('/delete-employee/<emp_id>')
-def delete_employee(emp_id):
-    success = Employee.delete_employee(emp_id)
+        success = Students.update_student(student_id, lname, fname, mname, sex, address, course_id)
 
+        if success:
+            session["message"] = "Student successfully updated"
+        else:
+            session["message"] = "Failed to update student"
+        
+        return redirect('/student-list')
+    else:
+        student = Students.get_student(student_id)
+        return render_template('update_student.html', student=student)
+
+@app.route('/delete-student/<student_id>')
+def delete_student(student_id):
+    success = Students.delete_student(student_id)
     if success:
-        session["message"] = "Successfully deleted"
+        session["message"] = "Student successfully deleted"
     else:
-        session["message"] = "Failed to delete employee"
-
-    return redirect('/employee-list')
+        session["message"] = "Failed to delete student"
+    return redirect('/student-list')
 
 if __name__ == '__main__':
     app.run(debug=True)
